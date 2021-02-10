@@ -261,30 +261,33 @@ namespace TestNET5
         /// <param name="e"> Аргумент событий. </param>
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (tabs[tabControl1.SelectedIndex].FilePath == null)
-                saveAsToolStripMenuItem.PerformClick();
-            else
+            if (tabs.Count != 0)
             {
-                try
+                if (tabs[tabControl1.SelectedIndex].FilePath == null)
+                    saveAsToolStripMenuItem.PerformClick();
+                else
                 {
-                    if (Path.GetExtension(tabs[tabControl1.SelectedIndex].FilePath) == ".rtf")
+                    try
                     {
-                        tabs[tabControl1.SelectedIndex].RichTB.SaveFile(tabs[tabControl1.SelectedIndex].FilePath);
-                        tabs[tabControl1.SelectedIndex].Name = tabs[tabControl1.SelectedIndex].Name.Replace("*",string.Empty);
-                        tabs[tabControl1.SelectedIndex].IsSaved = true;
+                        if (Path.GetExtension(tabs[tabControl1.SelectedIndex].FilePath) == ".rtf")
+                        {
+                            tabs[tabControl1.SelectedIndex].RichTB.SaveFile(tabs[tabControl1.SelectedIndex].FilePath);
+                            tabs[tabControl1.SelectedIndex].Name = tabs[tabControl1.SelectedIndex].Name.Replace("*", string.Empty);
+                            tabs[tabControl1.SelectedIndex].IsSaved = true;
+                        }
+                        else
+                        {
+                            tabs[tabControl1.SelectedIndex].Save();
+                            tabs[tabControl1.SelectedIndex].Name = tabs[tabControl1.SelectedIndex].Name.Replace("*", string.Empty);
+                        }
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        tabs[tabControl1.SelectedIndex].Save();
-                        tabs[tabControl1.SelectedIndex].Name = tabs[tabControl1.SelectedIndex].Name.Replace("*", string.Empty);
+                        MessageBox.Show(ex.Message, "Ошибка");
                     }
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, "Ошибка");
-                }
+                CheckTextChanged(sender, e);
             }
-            CheckTextChanged(sender, e);
         }
 
         /// <summary>
@@ -342,7 +345,7 @@ namespace TestNET5
         /// <param name="e"> Аргумент событий. </param>
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!isSaveDialogOpen)
+            if (!isSaveDialogOpen && tabs.Count!=0)
             {
                 saveFileDialog1.Title = "Сохранить как";
                 saveFileDialog1.InitialDirectory = @"C:\";
